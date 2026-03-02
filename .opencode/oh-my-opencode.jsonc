@@ -1,0 +1,9 @@
+{
+  // Project-level overrides layered on top of:
+  // ~/.config/opencode/oh-my-opencode.json
+  // JX dedicated agents are defined in:
+  // .claude/agents/jx-*.md
+  "claude_code": {
+    "agents": true
+  }
+}

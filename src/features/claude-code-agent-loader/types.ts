@@ -6,6 +6,7 @@ export interface AgentFrontmatter {
   name?: string
   description?: string
   model?: string
+  variant?: string
   tools?: string
 }
 

@@ -48,6 +48,13 @@ function loadAgentsFromDir(agentsDir: string, scope: AgentScope): LoadedAgent[] 
          prompt: body.trim(),
        }
 
+       if (typeof data.model === "string" && data.model.trim().length > 0) {
+         config.model = data.model.trim()
+       }
+       if (typeof data.variant === "string" && data.variant.trim().length > 0) {
+         config.variant = data.variant.trim()
+       }
+
        const toolsConfig = parseToolsConfig(data.tools)
       if (toolsConfig) {
         config.tools = toolsConfig

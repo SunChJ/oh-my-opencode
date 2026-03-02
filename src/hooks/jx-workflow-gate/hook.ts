@@ -13,11 +13,11 @@ type ToolExecuteBeforeOutput = {
 }
 
 const STAGE_ALLOWED_AGENTS: Record<Exclude<JxWorkflowStage, "implementation">, Set<string>> = {
-  ideation: new Set(["oracle", "librarian", "explore"]),
-  product_spec: new Set(["oracle", "librarian"]),
-  experience_design: new Set(["metis", "momus", "explore", "librarian"]),
-  technical_design: new Set(["hephaestus", "oracle", "metis", "librarian"]),
-  launch_readiness: new Set(["explore", "momus", "oracle", "librarian", "hephaestus", "metis", "sisyphus"]),
+  ideation: new Set(["jx-problem-analyst", "jx-reference-researcher"]),
+  product_spec: new Set(["jx-prd-owner"]),
+  experience_design: new Set(["jx-ux-designer", "jx-ui-designer"]),
+  technical_design: new Set(["jx-solution-architect"]),
+  launch_readiness: new Set(["jx-qa-lead", "jx-ux-polish-lead"]),
 }
 
 function readString(value: unknown): string | undefined {

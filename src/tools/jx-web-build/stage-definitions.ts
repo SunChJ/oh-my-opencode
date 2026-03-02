@@ -35,14 +35,14 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
       {
         id: "problem-analyst",
         title: "Problem Analyst",
-        suggestedAgent: "oracle",
+        suggestedAgent: "jx-problem-analyst",
         objective: "Clarify user, problem, and expected outcomes in plain language.",
         deliverable: "Idea brief with target user, primary scenario, and non-goals.",
       },
       {
         id: "reference-researcher",
         title: "Reference Researcher",
-        suggestedAgent: "librarian",
+        suggestedAgent: "jx-reference-researcher",
         objective: "Collect relevant product patterns and implementation constraints.",
         deliverable: "Reference brief with examples and key risks.",
       },
@@ -57,7 +57,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
       {
         id: "prd-owner",
         title: "PRD Owner",
-        suggestedAgent: "oracle",
+        suggestedAgent: "jx-prd-owner",
         objective: "Create a concrete PRD-lite suitable for implementation.",
         deliverable: "PRD-lite with flows, requirements, and acceptance checklist.",
       },
@@ -72,14 +72,14 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
       {
         id: "ux-designer",
         title: "UX Designer",
-        suggestedAgent: "metis",
+        suggestedAgent: "jx-ux-designer",
         objective: "Define route map, page hierarchy, and interaction flow.",
         deliverable: "UX flow spec and page-by-page requirements.",
       },
       {
         id: "ui-designer",
         title: "UI Designer",
-        suggestedAgent: "momus",
+        suggestedAgent: "jx-ui-designer",
         objective: "Define visual tokens and shadcn component mapping.",
         deliverable: "UI spec with states (empty/loading/error/success).",
       },
@@ -94,7 +94,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
       {
         id: "solution-architect",
         title: "Solution Architect",
-        suggestedAgent: "hephaestus",
+        suggestedAgent: "jx-solution-architect",
         objective: "Define app structure, modules, data contracts, and implementation sequence.",
         deliverable: "Technical design doc and task graph for implementation.",
       },
@@ -109,7 +109,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
       {
         id: "delivery-engineer",
         title: "Delivery Engineer",
-        suggestedAgent: "sisyphus",
+        suggestedAgent: "jx-delivery-engineer",
         objective: "Build feature slices and keep project shippable.",
         deliverable: "Running app with lint/typecheck/build passing.",
       },
@@ -124,14 +124,14 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
       {
         id: "qa-lead",
         title: "QA Lead",
-        suggestedAgent: "explore",
+        suggestedAgent: "jx-qa-lead",
         objective: "Verify behavior and edge cases against acceptance criteria.",
         deliverable: "QA report with pass/fail and residual risk list.",
       },
       {
         id: "ux-polish-lead",
         title: "UX Polish Lead",
-        suggestedAgent: "momus",
+        suggestedAgent: "jx-ux-polish-lead",
         objective: "Ensure consistency of visual and interaction quality.",
         deliverable: "Polish checklist and final improvement notes.",
       },

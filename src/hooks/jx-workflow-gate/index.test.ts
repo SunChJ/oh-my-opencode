@@ -52,7 +52,7 @@ describe("createJxWorkflowGateHook", () => {
         } as never,
         {
           args: {
-            subagent_type: "sisyphus",
+            subagent_type: "jx-delivery-engineer",
             run_in_background: false,
           },
         } as never,
@@ -81,7 +81,7 @@ describe("createJxWorkflowGateHook", () => {
         } as never,
         {
           args: {
-            subagent_type: "oracle",
+            subagent_type: "jx-problem-analyst",
             run_in_background: false,
           },
         } as never,
@@ -140,7 +140,7 @@ describe("createJxWorkflowGateHook", () => {
         } as never,
         {
           args: {
-            subagent_type: "sisyphus",
+            subagent_type: "jx-delivery-engineer",
             run_in_background: false,
           },
         } as never,
