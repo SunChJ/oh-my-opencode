@@ -2,6 +2,12 @@ import { JX_STAGE_DEFINITIONS, JX_STAGE_ORDER, type JxRoleAssignment } from "./s
 import type { JxWorkflowState } from "./workflow-state"
 import { renderJxDispatchPlan } from "./dispatch-plan"
 
+type JxScaffoldPlanOptions = {
+  bootstrapTemplate?: string
+}
+
+type BootstrapTemplateType = "remote" | "local"
+
 function renderStageLine(state: JxWorkflowState, stage: (typeof JX_STAGE_ORDER)[number]): string {
   const stageState = state.stages.find((item) => item.stage === stage)
   const status = stageState?.status ?? "locked"
@@ -86,18 +92,68 @@ export function renderJxRolePlan(state: JxWorkflowState): string {
   ].join("\n")
 }
 
-export function renderJxScaffoldPlan(state: JxWorkflowState): string {
-  const slug = state.productName
-    .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-  const projectDir = slug.length > 0 ? slug : "jx-web-app"
+function detectBootstrapTemplateType(template: string): BootstrapTemplateType {
+  const lowered = template.toLowerCase()
+  if (
+    lowered.startsWith("http://")
+    || lowered.startsWith("https://")
+    || lowered.startsWith("ssh://")
+    || template.startsWith("git@")
+  ) {
+    return "remote"
+  }
 
+  return "local"
+}
+
+function normalizeLocalTemplatePath(path: string): string {
+  const trimmed = path.trim()
+  if (trimmed.startsWith("file://")) {
+    return trimmed.replace(/^file:\/\//, "")
+  }
+  if (trimmed.startsWith("~/")) {
+    return `$HOME/${trimmed.slice(2)}`
+  }
+  return trimmed
+}
+
+function renderRemoteTemplateBootstrapCommands(input: {
+  projectDir: string
+  bootstrapTemplate: string
+}): string[] {
   return [
-    "# JX Scaffold Plan",
-    "",
-    "## Commands",
+    "## Commands (Template Bootstrap - Git)",
+    "```bash",
+    `git clone --depth 1 "${input.bootstrapTemplate}" "${input.projectDir}"`,
+    `cd "${input.projectDir}"`,
+    "npm install",
+    "npm run lint",
+    "npm run build",
+    "```",
+  ]
+}
+
+function renderLocalTemplateBootstrapCommands(input: {
+  projectDir: string
+  bootstrapTemplate: string
+}): string[] {
+  const templatePath = normalizeLocalTemplatePath(input.bootstrapTemplate)
+  return [
+    "## Commands (Template Bootstrap - Local Copy)",
+    "```bash",
+    `mkdir -p "${input.projectDir}"`,
+    `cp -R "${templatePath}/." "${input.projectDir}"`,
+    `cd "${input.projectDir}"`,
+    "npm install",
+    "npm run lint",
+    "npm run build",
+    "```",
+  ]
+}
+
+function renderDefaultBootstrapCommands(projectDir: string): string[] {
+  return [
+    "## Commands (Default Bootstrap)",
     "```bash",
     `npx create-next-app@latest ${projectDir} --ts --eslint --tailwind --app --src-dir --import-alias \"@/*\" --use-npm`,
     `cd ${projectDir}`,
@@ -106,6 +162,46 @@ export function renderJxScaffoldPlan(state: JxWorkflowState): string {
     "npm run lint",
     "npm run build",
     "```",
+  ]
+}
+
+export function renderJxScaffoldPlan(
+  state: JxWorkflowState,
+  options?: JxScaffoldPlanOptions,
+): string {
+  const slug = state.productName
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+  const projectDir = slug.length > 0 ? slug : "jx-web-app"
+  const bootstrapTemplate = options?.bootstrapTemplate?.trim()
+  const hasTemplateBootstrap = typeof bootstrapTemplate === "string" && bootstrapTemplate.length > 0
+  const templateType = hasTemplateBootstrap ? detectBootstrapTemplateType(bootstrapTemplate) : null
+  const commandSection = !hasTemplateBootstrap
+    ? renderDefaultBootstrapCommands(projectDir)
+    : templateType === "remote"
+      ? renderRemoteTemplateBootstrapCommands({
+          projectDir,
+          bootstrapTemplate,
+        })
+      : renderLocalTemplateBootstrapCommands({
+          projectDir,
+          bootstrapTemplate,
+        })
+  const bootstrapModeLine = hasTemplateBootstrap
+    ? `Bootstrap mode: template-first (${templateType}: ${bootstrapTemplate})`
+    : "Bootstrap mode: default scaffold (create-next-app + shadcn)"
+
+  return [
+    "# JX Scaffold Plan",
+    "",
+    ...commandSection,
+    "",
+    "## De-template Checklist",
+    "- Remove demo content/routes while keeping build setup intact.",
+    "- Keep foundational tooling (tsconfig, eslint, tailwind, shadcn config).",
+    "- Preserve only reusable layout primitives and UI building blocks.",
     "",
     "## Baseline Structure",
     "- src/app/(marketing)/page.tsx",
@@ -117,6 +213,7 @@ export function renderJxScaffoldPlan(state: JxWorkflowState): string {
     "- src/lib/actions/*",
     "",
     "## Build Notes",
+    `- ${bootstrapModeLine}`,
     `- Idea: ${state.idea}`,
     "- Build highest-value 3 user flows first.",
     "- Include loading/empty/error states per flow.",

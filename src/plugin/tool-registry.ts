@@ -133,7 +133,9 @@ export function createToolRegistry(args: {
     skill_mcp: skillMcpTool,
     skill: skillTool,
     cj_web_builder: createCjWebBuilderTool(ctx),
-    jx_web_build: createJxWebBuildTool(ctx),
+    jx_web_build: createJxWebBuildTool(ctx, {
+      bootstrapTemplate: pluginConfig.jx_web_build?.bootstrap_template,
+    }),
     interactive_bash,
     ...taskToolsRecord,
     ...hashlineToolsRecord,

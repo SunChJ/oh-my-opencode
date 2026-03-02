@@ -3736,6 +3736,15 @@
       ],
       "additionalProperties": false
     },
+    "jx_web_build": {
+      "type": "object",
+      "properties": {
+        "bootstrap_template": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "browser_automation_engine": {
       "type": "object",
       "properties": {

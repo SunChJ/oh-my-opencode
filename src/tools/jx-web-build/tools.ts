@@ -36,6 +36,10 @@ type JxToolContext = {
   directory?: string
 }
 
+type JxWebBuildToolOptions = {
+  bootstrapTemplate?: string
+}
+
 const JX_WEB_BUILD_DESCRIPTION = `JX web build orchestrator for beginner-friendly product delivery.
 
 Build flow: ideation -> product_spec -> experience_design -> technical_design -> implementation -> launch_readiness.
@@ -92,7 +96,10 @@ function requireState(sessionID: string, directory: string): { stateText?: strin
   return { state }
 }
 
-export function createJxWebBuildTool(ctx: PluginInput): ToolDefinition {
+export function createJxWebBuildTool(
+  ctx: PluginInput,
+  options?: JxWebBuildToolOptions,
+): ToolDefinition {
   return tool({
     description: JX_WEB_BUILD_DESCRIPTION,
     args: {
@@ -137,7 +144,9 @@ export function createJxWebBuildTool(ctx: PluginInput): ToolDefinition {
         case "scaffold": {
           const { stateText, state } = requireState(sessionID, directory)
           if (stateText) return stateText
-          return renderJxScaffoldPlan(state!)
+          return renderJxScaffoldPlan(state!, {
+            bootstrapTemplate: options?.bootstrapTemplate,
+          })
         }
 
         case "backlog": {

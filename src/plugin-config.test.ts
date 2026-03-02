@@ -115,6 +115,26 @@ describe("mergeConfigs", () => {
       expect(result.disabled_hooks).toContain("session-recovery");
       expect(result.disabled_hooks?.length).toBe(3);
     });
+
+    it("should preserve jx_web_build config on merge", () => {
+      const base: OhMyOpenCodeConfig = {
+        jx_web_build: {
+          bootstrap_template: "https://github.com/acme/template-a.git",
+        },
+      };
+
+      const override: OhMyOpenCodeConfig = {
+        jx_web_build: {
+          bootstrap_template: "https://github.com/acme/template-b.git",
+        },
+      };
+
+      const result = mergeConfigs(base, override);
+
+      expect(result.jx_web_build?.bootstrap_template).toBe(
+        "https://github.com/acme/template-b.git"
+      );
+    });
   });
 });
 
@@ -234,6 +254,21 @@ describe("parseConfigPartially", () => {
       expect(result).not.toBeNull();
       expect(result!.agents?.oracle?.model).toBe("openai/gpt-5.2");
       expect((result as Record<string, unknown>)["some_future_key"]).toBeUndefined();
+    });
+
+    it("should parse jx_web_build section as known config", () => {
+      const rawConfig = {
+        jx_web_build: {
+          bootstrap_template: "https://github.com/acme/next-shadcn.git",
+        },
+      };
+
+      const result = parseConfigPartially(rawConfig);
+
+      expect(result).not.toBeNull();
+      expect(result!.jx_web_build?.bootstrap_template).toBe(
+        "https://github.com/acme/next-shadcn.git"
+      );
     });
   });
 });

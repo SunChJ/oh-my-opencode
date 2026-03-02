@@ -127,4 +127,48 @@ describe("jx_web_build tool", () => {
     expect(scaffoldOutput).toContain("npx shadcn@latest init -d")
     expect(backlogOutput).toContain("Backlog is available in implementation stage only")
   })
+
+  test("uses template bootstrap when configured", async () => {
+    //#given
+    const pluginInput = createMockPluginInput(TEST_ROOT)
+    const tool = createJxWebBuildTool(pluginInput, {
+      bootstrapTemplate: "https://github.com/acme/next-shadcn-starter.git",
+    })
+    const context = createMockContext(TEST_SESSION_ID, TEST_ROOT)
+
+    await tool.execute({
+      action: "init",
+      idea: "Build a web app for launch checklists.",
+      product_name: "Launch Pilot",
+    }, context)
+
+    //#when
+    const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
+
+    //#then
+    expect(scaffoldOutput).toContain("git clone --depth 1 \"https://github.com/acme/next-shadcn-starter.git\" \"launch-pilot\"")
+    expect(scaffoldOutput).toContain("## De-template Checklist")
+  })
+
+  test("uses local copy bootstrap when template is a local path", async () => {
+    //#given
+    const pluginInput = createMockPluginInput(TEST_ROOT)
+    const tool = createJxWebBuildTool(pluginInput, {
+      bootstrapTemplate: "/Users/samsoncj/templates/next-shadcn-starter",
+    })
+    const context = createMockContext(TEST_SESSION_ID, TEST_ROOT)
+
+    await tool.execute({
+      action: "init",
+      idea: "Build a web app for team retrospectives.",
+      product_name: "Retro Base",
+    }, context)
+
+    //#when
+    const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
+
+    //#then
+    expect(scaffoldOutput).toContain("## Commands (Template Bootstrap - Local Copy)")
+    expect(scaffoldOutput).toContain("cp -R \"/Users/samsoncj/templates/next-shadcn-starter/.\" \"retro-base\"")
+  })
 })
