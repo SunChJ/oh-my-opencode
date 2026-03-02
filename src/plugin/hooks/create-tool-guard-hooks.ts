@@ -15,6 +15,7 @@ import {
   createReadImageResizerHook,
   createJsonErrorRecoveryHook,
   createCjWorkflowGateHook,
+  createJxWorkflowGateHook,
 } from "../../hooks"
 import {
   getOpenCodeVersion,
@@ -37,6 +38,7 @@ export type ToolGuardHooks = {
   jsonErrorRecovery: ReturnType<typeof createJsonErrorRecoveryHook> | null
   readImageResizer: ReturnType<typeof createReadImageResizerHook> | null
   cjWorkflowGate: ReturnType<typeof createCjWorkflowGateHook> | null
+  jxWorkflowGate: ReturnType<typeof createJxWorkflowGateHook> | null
 }
 
 export function createToolGuardHooks(args: {
@@ -117,6 +119,10 @@ export function createToolGuardHooks(args: {
     ? safeHook("cj-workflow-gate", () => createCjWorkflowGateHook(ctx))
     : null
 
+  const jxWorkflowGate = isHookEnabled("jx-workflow-gate")
+    ? safeHook("jx-workflow-gate", () => createJxWorkflowGateHook(ctx))
+    : null
+
   return {
     commentChecker,
     toolOutputTruncator,
@@ -130,5 +136,6 @@ export function createToolGuardHooks(args: {
     jsonErrorRecovery,
     readImageResizer,
     cjWorkflowGate,
+    jxWorkflowGate,
   }
 }

@@ -35,3 +35,10 @@ test-injection/
 notepad.md
 oauth-success.html
 *.bun-build
+
+# Local runtime state
+.opencode/background-tasks.json
+.opencode/cj-workflows/
+.opencode/jx-web-build-workflows/
+.issue-comment-*.md
+.test-*/

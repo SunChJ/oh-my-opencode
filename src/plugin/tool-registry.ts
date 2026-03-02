@@ -25,6 +25,8 @@ import {
   createTaskList,
   createTaskUpdateTool,
   createHashlineEditTool,
+  createCjWebBuilderTool,
+  createJxWebBuildTool,
 } from "../tools"
 import { getMainSessionID } from "../features/claude-code-session-state"
 import { filterDisabledTools } from "../shared/disabled-tools"
@@ -130,6 +132,8 @@ export function createToolRegistry(args: {
     task: delegateTask,
     skill_mcp: skillMcpTool,
     skill: skillTool,
+    cj_web_builder: createCjWebBuilderTool(ctx),
+    jx_web_build: createJxWebBuildTool(ctx),
     interactive_bash,
     ...taskToolsRecord,
     ...hashlineToolsRecord,
