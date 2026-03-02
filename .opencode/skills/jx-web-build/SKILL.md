@@ -25,7 +25,7 @@ description: jx-web-build - 用角色分工把想法落地为 Next.js + shadcn W
 
 2. 角色拆解
 - 调用：`jx_web_build(action="role_plan")`
-- 把每个角色任务转成可执行清单，先让用户确认。
+- 把每个角色任务转成可执行清单后直接执行，不需要用户确认角色分工。
 
 3. 调度计划
 - 调用：`jx_web_build(action="dispatch_plan")`
@@ -46,3 +46,4 @@ description: jx-web-build - 用角色分工把想法落地为 Next.js + shadcn W
 - 语言简洁，避免术语堆叠。
 - 优先给用户“下一步按钮式建议”（最多 3 项）。
 - 每次回复都要标注：当前阶段、已完成、下一步。
+- 不向用户发起“角色分工是否同意”的确认问题，默认按计划推进。
