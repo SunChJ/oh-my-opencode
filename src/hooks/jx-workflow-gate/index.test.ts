@@ -89,6 +89,35 @@ describe("createJxWorkflowGateHook", () => {
     ).resolves.toBeUndefined()
   })
 
+  test("allows librarian compatibility agent in ideation", async () => {
+    //#given
+    const sessionID = "ses-jx-gate-2b"
+    const state = createJxWorkflowState({
+      sessionID,
+      idea: "Build a web app for product pattern research.",
+    })
+    saveJxWorkflowState(tempDir, state)
+
+    const hook = createJxWorkflowGateHook({ directory: tempDir } as never)
+
+    //#when / #then
+    await expect(
+      hook["tool.execute.before"]?.(
+        {
+          tool: "task",
+          sessionID,
+          callID: "call-2b",
+        } as never,
+        {
+          args: {
+            subagent_type: "librarian",
+            run_in_background: true,
+          },
+        } as never,
+      ),
+    ).resolves.toBeUndefined()
+  })
+
   test("blocks category delegation before implementation", async () => {
     //#given
     const sessionID = "ses-jx-gate-3"

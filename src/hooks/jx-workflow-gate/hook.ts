@@ -13,7 +13,7 @@ type ToolExecuteBeforeOutput = {
 }
 
 const STAGE_ALLOWED_AGENTS: Record<Exclude<JxWorkflowStage, "implementation">, Set<string>> = {
-  ideation: new Set(["jx-problem-analyst", "jx-reference-researcher"]),
+  ideation: new Set(["jx-problem-analyst", "jx-reference-researcher", "librarian", "explore"]),
   product_spec: new Set(["jx-prd-owner"]),
   experience_design: new Set(["jx-ux-designer", "jx-ui-designer"]),
   technical_design: new Set(["jx-solution-architect"]),
