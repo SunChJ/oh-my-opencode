@@ -45,3 +45,4 @@ oauth-success.html
 .opencode/jx-web-build-workflows/
 .issue-comment-*.md
 .test-*/
+snowflake-writer-agent-web/
