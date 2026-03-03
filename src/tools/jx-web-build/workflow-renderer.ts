@@ -8,6 +8,8 @@ type JxScaffoldPlanOptions = {
   workspaceDirectory?: string
 }
 
+const JX_ARTIFACTS_ROOT = "artifacts/jx-web-build"
+
 type BootstrapTemplateType = "remote" | "local"
 
 function renderStageLine(state: JxWorkflowState, stage: (typeof JX_STAGE_ORDER)[number]): string {
@@ -173,8 +175,8 @@ function renderDefaultBootstrapCommands(projectDir: string): string[] {
   return [
     "## Commands (Default Bootstrap)",
     "```bash",
-    `npx create-next-app@latest ${projectDir} --ts --eslint --tailwind --app --src-dir --import-alias \"@/*\" --use-npm`,
-    `cd ${projectDir}`,
+    `npx create-next-app@latest \"${projectDir}\" --ts --eslint --tailwind --app --src-dir --import-alias \"@/*\" --use-npm`,
+    `cd \"${projectDir}\"`,
     "npx shadcn@latest init -d",
     "npx shadcn@latest add button card input form dialog drawer dropdown-menu tabs toast table badge skeleton",
     "npm run lint",
@@ -192,7 +194,8 @@ export function renderJxScaffoldPlan(
     .replace(/[^a-z0-9-]/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
-  const projectDir = slug.length > 0 ? slug : "jx-web-app"
+  const projectName = slug.length > 0 ? slug : "jx-web-app"
+  const projectDir = `${JX_ARTIFACTS_ROOT}/${projectName}`
   const bootstrapTemplate = options?.bootstrapTemplate?.trim()
   const hasTemplateBootstrap = typeof bootstrapTemplate === "string" && bootstrapTemplate.length > 0
   const templateType = hasTemplateBootstrap ? detectBootstrapTemplateType(bootstrapTemplate) : null
@@ -232,6 +235,7 @@ export function renderJxScaffoldPlan(
     "- src/lib/actions/*",
     "",
     "## Build Notes",
+    `- Output directory: ${projectDir}`,
     `- ${bootstrapModeLine}`,
     `- Idea: ${state.idea}`,
     "- Build highest-value 3 user flows first.",

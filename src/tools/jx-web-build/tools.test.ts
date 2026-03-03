@@ -123,7 +123,8 @@ describe("jx_web_build tool", () => {
     const backlogOutput = await tool.execute({ action: "backlog" }, context)
 
     //#then
-    expect(scaffoldOutput).toContain("npx create-next-app@latest campaign-radar")
+    expect(scaffoldOutput).toContain("npx create-next-app@latest \"artifacts/jx-web-build/campaign-radar\"")
+    expect(scaffoldOutput).toContain("Output directory: artifacts/jx-web-build/campaign-radar")
     expect(scaffoldOutput).toContain("npx shadcn@latest init -d")
     expect(backlogOutput).toContain("Backlog is available in implementation stage only")
   })
@@ -146,7 +147,7 @@ describe("jx_web_build tool", () => {
     const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
 
     //#then
-    expect(scaffoldOutput).toContain("git clone --depth 1 \"https://github.com/acme/next-shadcn-starter.git\" \"launch-pilot\"")
+    expect(scaffoldOutput).toContain("git clone --depth 1 \"https://github.com/acme/next-shadcn-starter.git\" \"artifacts/jx-web-build/launch-pilot\"")
     expect(scaffoldOutput).toContain("## De-template Checklist")
   })
 
@@ -169,7 +170,7 @@ describe("jx_web_build tool", () => {
 
     //#then
     expect(scaffoldOutput).toContain("## Commands (Template Bootstrap - Local Copy)")
-    expect(scaffoldOutput).toContain("cp -R \"/Users/samsoncj/templates/next-shadcn-starter/.\" \"retro-base\"")
+    expect(scaffoldOutput).toContain("cp -R \"/Users/samsoncj/templates/next-shadcn-starter/.\" \"artifacts/jx-web-build/retro-base\"")
     expect(scaffoldOutput).toContain("if [ -f pnpm-lock.yaml ]; then PM=pnpm;")
   })
 
@@ -191,6 +192,6 @@ describe("jx_web_build tool", () => {
     const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
 
     //#then
-    expect(scaffoldOutput).toContain(`cp -R \"${join(TEST_ROOT, "templates/next-shadcn-starter")}/.\" \"roadmap-flow\"`)
+    expect(scaffoldOutput).toContain(`cp -R \"${join(TEST_ROOT, "templates/next-shadcn-starter")}/.\" \"artifacts/jx-web-build/roadmap-flow\"`)
   })
 })
