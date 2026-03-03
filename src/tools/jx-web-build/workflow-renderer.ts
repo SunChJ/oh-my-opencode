@@ -1,9 +1,11 @@
+import { isAbsolute, resolve } from "node:path"
 import { JX_STAGE_DEFINITIONS, JX_STAGE_ORDER, type JxRoleAssignment } from "./stage-definitions"
 import type { JxWorkflowState } from "./workflow-state"
 import { renderJxDispatchPlan } from "./dispatch-plan"
 
 type JxScaffoldPlanOptions = {
   bootstrapTemplate?: string
+  workspaceDirectory?: string
 }
 
 type BootstrapTemplateType = "remote" | "local"
@@ -117,6 +119,20 @@ function normalizeLocalTemplatePath(path: string): string {
   return trimmed
 }
 
+function resolveLocalTemplatePath(path: string, workspaceDirectory?: string): string {
+  const normalized = normalizeLocalTemplatePath(path)
+  if (normalized.startsWith("$HOME/")) {
+    return normalized
+  }
+  if (normalized.startsWith("$")) {
+    return normalized
+  }
+  if (isAbsolute(normalized)) {
+    return normalized
+  }
+  return resolve(workspaceDirectory ?? ".", normalized)
+}
+
 function renderRemoteTemplateBootstrapCommands(input: {
   projectDir: string
   bootstrapTemplate: string
@@ -136,15 +152,16 @@ function renderRemoteTemplateBootstrapCommands(input: {
 function renderLocalTemplateBootstrapCommands(input: {
   projectDir: string
   bootstrapTemplate: string
+  workspaceDirectory?: string
 }): string[] {
-  const templatePath = normalizeLocalTemplatePath(input.bootstrapTemplate)
+  const templatePath = resolveLocalTemplatePath(input.bootstrapTemplate, input.workspaceDirectory)
   return [
     "## Commands (Template Bootstrap - Local Copy)",
     "```bash",
     `mkdir -p "${input.projectDir}"`,
     `cp -R "${templatePath}/." "${input.projectDir}"`,
     `cd "${input.projectDir}"`,
-    "npm install",
+    "if [ -d node_modules ]; then echo \"node_modules found, skip install\"; else npm install; fi",
     "npm run lint",
     "npm run build",
     "```",
@@ -188,6 +205,7 @@ export function renderJxScaffoldPlan(
       : renderLocalTemplateBootstrapCommands({
           projectDir,
           bootstrapTemplate,
+          workspaceDirectory: options?.workspaceDirectory,
         })
   const bootstrapModeLine = hasTemplateBootstrap
     ? `Bootstrap mode: template-first (${templateType}: ${bootstrapTemplate})`

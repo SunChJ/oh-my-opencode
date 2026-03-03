@@ -5,5 +5,8 @@
   // .claude/agents/jx-*.md
   "claude_code": {
     "agents": true
+  },
+  "jx_web_build": {
+    "bootstrap_template": "templates/next-shadcn-starter"
   }
 }

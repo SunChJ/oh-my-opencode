@@ -171,4 +171,25 @@ describe("jx_web_build tool", () => {
     expect(scaffoldOutput).toContain("## Commands (Template Bootstrap - Local Copy)")
     expect(scaffoldOutput).toContain("cp -R \"/Users/samsoncj/templates/next-shadcn-starter/.\" \"retro-base\"")
   })
+
+  test("resolves relative template path from workspace directory", async () => {
+    //#given
+    const pluginInput = createMockPluginInput(TEST_ROOT)
+    const tool = createJxWebBuildTool(pluginInput, {
+      bootstrapTemplate: "templates/next-shadcn-starter",
+    })
+    const context = createMockContext(TEST_SESSION_ID, TEST_ROOT)
+
+    await tool.execute({
+      action: "init",
+      idea: "Build a web app for roadmap planning.",
+      product_name: "Roadmap Flow",
+    }, context)
+
+    //#when
+    const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
+
+    //#then
+    expect(scaffoldOutput).toContain(`cp -R \"${join(TEST_ROOT, "templates/next-shadcn-starter")}/.\" \"roadmap-flow\"`)
+  })
 })

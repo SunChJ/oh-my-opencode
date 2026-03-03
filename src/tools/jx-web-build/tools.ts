@@ -146,6 +146,7 @@ export function createJxWebBuildTool(
           if (stateText) return stateText
           return renderJxScaffoldPlan(state!, {
             bootstrapTemplate: options?.bootstrapTemplate,
+            workspaceDirectory: directory,
           })
         }
 

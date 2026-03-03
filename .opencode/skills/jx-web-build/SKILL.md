@@ -12,6 +12,7 @@ description: jx-web-build - 用角色分工把想法落地为 Next.js + shadcn W
 - 必须先规划再编码，未通过阶段 gate 不能直接跳实现。
 - 角色分工要明确：每个阶段给出谁做、产出什么、完成标准是什么。
 - 技术栈固定为：Next.js + shadcn + Tailwind。
+- 若配置了 `.opencode/oh-my-opencode.jsonc` 的 `jx_web_build.bootstrap_template`，`scaffold` 会优先使用模板拷贝/克隆。
 
 ## 阶段流
 
@@ -47,3 +48,7 @@ description: jx-web-build - 用角色分工把想法落地为 Next.js + shadcn W
 - 优先给用户“下一步按钮式建议”（最多 3 项）。
 - 每次回复都要标注：当前阶段、已完成、下一步。
 - 不向用户发起“角色分工是否同意”的确认问题，默认按计划推进。
+
+## 模板建议
+
+- 推荐将 `jx_web_build.bootstrap_template` 配置为项目内相对路径，例如：`templates/next-shadcn-starter`。
