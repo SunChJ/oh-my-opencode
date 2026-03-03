@@ -77,9 +77,10 @@ describe("jx_web_build tool", () => {
 
     //#then
     expect(roleOutput).toContain("JX Role Plan")
-    expect(roleOutput).toContain("task(")
+    expect(roleOutput).toContain("load_skills=[\"prd\"]")
     expect(dispatchOutput).toContain("JX Dispatch Plan")
     expect(dispatchOutput).toContain("Dispatch mode")
+    expect(dispatchOutput).toContain("load_skills=[\"prd\"]")
   })
 
   test("approves stage and advances to product_spec", async () => {
@@ -121,10 +122,11 @@ describe("jx_web_build tool", () => {
     //#when
     const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
     const backlogOutput = await tool.execute({ action: "backlog" }, context)
+    const expectedDir = join(TEST_ROOT, "artifacts/jx-web-build/campaign-radar")
 
     //#then
-    expect(scaffoldOutput).toContain("npx create-next-app@latest \"artifacts/jx-web-build/campaign-radar\"")
-    expect(scaffoldOutput).toContain("Output directory: artifacts/jx-web-build/campaign-radar")
+    expect(scaffoldOutput).toContain(`npx create-next-app@latest \"${expectedDir}\"`)
+    expect(scaffoldOutput).toContain(`Output directory: ${expectedDir}`)
     expect(scaffoldOutput).toContain("npx shadcn@latest init -d")
     expect(backlogOutput).toContain("Backlog is available in implementation stage only")
   })
@@ -145,9 +147,10 @@ describe("jx_web_build tool", () => {
 
     //#when
     const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
+    const expectedDir = join(TEST_ROOT, "artifacts/jx-web-build/launch-pilot")
 
     //#then
-    expect(scaffoldOutput).toContain("git clone --depth 1 \"https://github.com/acme/next-shadcn-starter.git\" \"artifacts/jx-web-build/launch-pilot\"")
+    expect(scaffoldOutput).toContain(`git clone --depth 1 \"https://github.com/acme/next-shadcn-starter.git\" \"${expectedDir}\"`)
     expect(scaffoldOutput).toContain("## De-template Checklist")
   })
 
@@ -167,10 +170,11 @@ describe("jx_web_build tool", () => {
 
     //#when
     const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
+    const expectedDir = join(TEST_ROOT, "artifacts/jx-web-build/retro-base")
 
     //#then
     expect(scaffoldOutput).toContain("## Commands (Template Bootstrap - Local Copy)")
-    expect(scaffoldOutput).toContain("cp -R \"/Users/samsoncj/templates/next-shadcn-starter/.\" \"artifacts/jx-web-build/retro-base\"")
+    expect(scaffoldOutput).toContain(`cp -R \"/Users/samsoncj/templates/next-shadcn-starter/.\" \"${expectedDir}\"`)
     expect(scaffoldOutput).toContain("if [ -f pnpm-lock.yaml ]; then PM=pnpm;")
   })
 
@@ -190,8 +194,9 @@ describe("jx_web_build tool", () => {
 
     //#when
     const scaffoldOutput = await tool.execute({ action: "scaffold" }, context)
+    const expectedDir = join(TEST_ROOT, "artifacts/jx-web-build/roadmap-flow")
 
     //#then
-    expect(scaffoldOutput).toContain(`cp -R \"${join(TEST_ROOT, "templates/next-shadcn-starter")}/.\" \"artifacts/jx-web-build/roadmap-flow\"`)
+    expect(scaffoldOutput).toContain(`cp -R \"${join(TEST_ROOT, "templates/next-shadcn-starter")}/.\" \"${expectedDir}\"`)
   })
 })

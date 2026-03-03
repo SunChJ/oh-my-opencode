@@ -15,6 +15,7 @@ export type JxRoleAssignment = {
   suggestedAgent: string
   objective: string
   deliverable: string
+  recommendedSkills: string[]
 }
 
 export type JxStageDefinition = {
@@ -38,6 +39,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
         suggestedAgent: "jx-problem-analyst",
         objective: "Clarify user, problem, and expected outcomes in plain language.",
         deliverable: "Idea brief with target user, primary scenario, and non-goals.",
+        recommendedSkills: ["prd"],
       },
       {
         id: "reference-researcher",
@@ -45,6 +47,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
         suggestedAgent: "jx-reference-researcher",
         objective: "Collect relevant product patterns and implementation constraints.",
         deliverable: "Reference brief with examples and key risks.",
+        recommendedSkills: ["nextjs-app-router-patterns", "shadcn-ui"],
       },
     ],
   },
@@ -60,6 +63,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
         suggestedAgent: "jx-prd-owner",
         objective: "Create a concrete PRD-lite suitable for implementation.",
         deliverable: "PRD-lite with flows, requirements, and acceptance checklist.",
+        recommendedSkills: ["prd"],
       },
     ],
   },
@@ -70,18 +74,12 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
     gate: "Flow map and UI spec approved.",
     roles: [
       {
-        id: "ux-designer",
-        title: "UX Designer",
-        suggestedAgent: "jx-ux-designer",
-        objective: "Define route map, page hierarchy, and interaction flow.",
-        deliverable: "UX flow spec and page-by-page requirements.",
-      },
-      {
-        id: "ui-designer",
-        title: "UI Designer",
+        id: "experience-designer",
+        title: "Experience Designer",
         suggestedAgent: "jx-ui-designer",
-        objective: "Define visual tokens and shadcn component mapping.",
-        deliverable: "UI spec with states (empty/loading/error/success).",
+        objective: "Unify route flow, interaction states, and component composition.",
+        deliverable: "Single experience spec: flow map + UI system + state coverage.",
+        recommendedSkills: ["shadcn-ui", "tailwind-design-system", "accessibility-compliance"],
       },
     ],
   },
@@ -97,6 +95,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
         suggestedAgent: "jx-solution-architect",
         objective: "Define app structure, modules, data contracts, and implementation sequence.",
         deliverable: "Technical design doc and task graph for implementation.",
+        recommendedSkills: ["nextjs-app-router-patterns", "tailwind-design-system"],
       },
     ],
   },
@@ -112,6 +111,7 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
         suggestedAgent: "jx-delivery-engineer",
         objective: "Build feature slices and keep project shippable.",
         deliverable: "Running app with lint/typecheck/build passing.",
+        recommendedSkills: ["nextjs-app-router-patterns", "shadcn-ui"],
       },
     ],
   },
@@ -122,18 +122,12 @@ export const JX_STAGE_DEFINITIONS: Record<JxWorkflowStage, JxStageDefinition> = 
     gate: "QA report and launch checklist approved.",
     roles: [
       {
-        id: "qa-lead",
-        title: "QA Lead",
+        id: "qa-polish-lead",
+        title: "QA & Polish Lead",
         suggestedAgent: "jx-qa-lead",
-        objective: "Verify behavior and edge cases against acceptance criteria.",
-        deliverable: "QA report with pass/fail and residual risk list.",
-      },
-      {
-        id: "ux-polish-lead",
-        title: "UX Polish Lead",
-        suggestedAgent: "jx-ux-polish-lead",
-        objective: "Ensure consistency of visual and interaction quality.",
-        deliverable: "Polish checklist and final improvement notes.",
+        objective: "Run acceptance QA and final UX consistency polish in one pass.",
+        deliverable: "Go/no-go report + prioritized polish checklist.",
+        recommendedSkills: ["webapp-testing", "accessibility-compliance", "code-review-excellence"],
       },
     ],
   },

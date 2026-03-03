@@ -10,6 +10,13 @@ type DispatchStep = {
   note: string
 }
 
+function formatLoadSkills(skills: string[]): string {
+  if (skills.length === 0) {
+    return "  load_skills=[],"
+  }
+  return `  load_skills=[${skills.map((skill) => `"${skill}"`).join(", ")}],`
+}
+
 function buildDispatchSteps(stage: JxWorkflowStage, roles: JxRoleAssignment[]): DispatchStep[] {
   if (roles.length <= 1) {
     return roles.map((role) => ({ role, mode: "sequential", note: "Single-role stage." }))
@@ -58,7 +65,7 @@ function buildTaskTemplate(input: {
   return [
     "task(",
     `  subagent_type=\"${step.role.suggestedAgent}\",`,
-    "  load_skills=[],",
+    formatLoadSkills(step.role.recommendedSkills),
     `  description=\"${stage}: ${step.role.title}\",`,
     `  prompt=\"${prompt.replace(/\"/g, '\\\"')}\",`,
     `  run_in_background=${step.mode === "parallel" ? "true" : "false"}`,
@@ -85,6 +92,7 @@ export function renderJxDispatchPlan(state: JxWorkflowState): string {
     return [
       `${index + 1}. ${step.role.title} (${step.mode})`,
       `- Agent: ${step.role.suggestedAgent}`,
+      `- Skills: ${step.role.recommendedSkills.join(", ")}`,
       `- Objective: ${step.role.objective}`,
       `- Deliverable: ${step.role.deliverable}`,
       `- Note: ${step.note}`,

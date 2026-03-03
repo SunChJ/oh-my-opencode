@@ -1,4 +1,4 @@
-import { isAbsolute, resolve } from "node:path"
+import { dirname, isAbsolute, resolve } from "node:path"
 import { JX_STAGE_DEFINITIONS, JX_STAGE_ORDER, type JxRoleAssignment } from "./stage-definitions"
 import type { JxWorkflowState } from "./workflow-state"
 import { renderJxDispatchPlan } from "./dispatch-plan"
@@ -19,6 +19,13 @@ function renderStageLine(state: JxWorkflowState, stage: (typeof JX_STAGE_ORDER)[
   return `${marker} ${stage} (${status})`
 }
 
+function formatLoadSkills(skills: string[]): string {
+  if (skills.length === 0) {
+    return "  load_skills=[],"
+  }
+  return `  load_skills=[${skills.map((skill) => `"${skill}"`).join(", ")}],`
+}
+
 function buildRoleTaskTemplate(input: {
   stage: string
   role: JxRoleAssignment
@@ -36,7 +43,7 @@ function buildRoleTaskTemplate(input: {
   return [
     "task(",
     `  subagent_type=\"${input.role.suggestedAgent}\",`,
-    "  load_skills=[],",
+    formatLoadSkills(input.role.recommendedSkills),
     `  description=\"${input.stage}: ${input.role.title}\",`,
     `  prompt=\"${prompt.replace(/\"/g, '\\\"')}\",`,
     "  run_in_background=false",
@@ -76,6 +83,7 @@ export function renderJxRolePlan(state: JxWorkflowState): string {
     return [
       `${index + 1}. ${role.title}`,
       `- Suggested agent: ${role.suggestedAgent}`,
+      `- Recommended skills: ${role.recommendedSkills.join(", ")}`,
       `- Objective: ${role.objective}`,
       `- Deliverable: ${role.deliverable}`,
       "- Execute:",
@@ -135,6 +143,10 @@ function resolveLocalTemplatePath(path: string, workspaceDirectory?: string): st
   return resolve(workspaceDirectory ?? ".", normalized)
 }
 
+function resolveArtifactsProjectDir(projectName: string, workspaceDirectory?: string): string {
+  return resolve(workspaceDirectory ?? ".", JX_ARTIFACTS_ROOT, projectName)
+}
+
 function renderRemoteTemplateBootstrapCommands(input: {
   projectDir: string
   bootstrapTemplate: string
@@ -142,6 +154,7 @@ function renderRemoteTemplateBootstrapCommands(input: {
   return [
     "## Commands (Template Bootstrap - Git)",
     "```bash",
+    `mkdir -p "${dirname(input.projectDir)}"`,
     `git clone --depth 1 "${input.bootstrapTemplate}" "${input.projectDir}"`,
     `cd "${input.projectDir}"`,
     "npm install",
@@ -175,6 +188,7 @@ function renderDefaultBootstrapCommands(projectDir: string): string[] {
   return [
     "## Commands (Default Bootstrap)",
     "```bash",
+    `mkdir -p "${dirname(projectDir)}"`,
     `npx create-next-app@latest \"${projectDir}\" --ts --eslint --tailwind --app --src-dir --import-alias \"@/*\" --use-npm`,
     `cd \"${projectDir}\"`,
     "npx shadcn@latest init -d",
@@ -195,7 +209,7 @@ export function renderJxScaffoldPlan(
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
   const projectName = slug.length > 0 ? slug : "jx-web-app"
-  const projectDir = `${JX_ARTIFACTS_ROOT}/${projectName}`
+  const projectDir = resolveArtifactsProjectDir(projectName, options?.workspaceDirectory)
   const bootstrapTemplate = options?.bootstrapTemplate?.trim()
   const hasTemplateBootstrap = typeof bootstrapTemplate === "string" && bootstrapTemplate.length > 0
   const templateType = hasTemplateBootstrap ? detectBootstrapTemplateType(bootstrapTemplate) : null
