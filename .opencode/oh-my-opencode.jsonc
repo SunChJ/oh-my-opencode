@@ -7,6 +7,6 @@
     "agents": true
   },
   "jx_web_build": {
-    "bootstrap_template": "templates/next-shadcn-starter"
+    "bootstrap_template": "templates/vibe-next-template"
   }
 }

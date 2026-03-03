@@ -161,9 +161,10 @@ function renderLocalTemplateBootstrapCommands(input: {
     `mkdir -p "${input.projectDir}"`,
     `cp -R "${templatePath}/." "${input.projectDir}"`,
     `cd "${input.projectDir}"`,
-    "if [ -d node_modules ]; then echo \"node_modules found, skip install\"; else npm install; fi",
-    "npm run lint",
-    "npm run build",
+    "if [ -f pnpm-lock.yaml ]; then PM=pnpm; elif [ -f bun.lockb ] || [ -f bun.lock ]; then PM=bun; elif [ -f yarn.lock ]; then PM=yarn; else PM=npm; fi",
+    "if [ -d node_modules ]; then echo \"node_modules found, skip install\"; else ${PM} install; fi",
+    "if [ \"$PM\" = \"npm\" ]; then npm run lint; else ${PM} run lint; fi",
+    "if [ \"$PM\" = \"npm\" ]; then npm run build; else ${PM} run build; fi",
     "```",
   ]
 }

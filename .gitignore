@@ -28,7 +28,6 @@ npm-debug.log*
 
 # Lock files (use bun.lockb instead)
 package-lock.json
-!templates/next-shadcn-starter/package-lock.json
 yarn.lock
 
 # Environment

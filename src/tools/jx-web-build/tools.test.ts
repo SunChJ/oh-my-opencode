@@ -170,6 +170,7 @@ describe("jx_web_build tool", () => {
     //#then
     expect(scaffoldOutput).toContain("## Commands (Template Bootstrap - Local Copy)")
     expect(scaffoldOutput).toContain("cp -R \"/Users/samsoncj/templates/next-shadcn-starter/.\" \"retro-base\"")
+    expect(scaffoldOutput).toContain("if [ -f pnpm-lock.yaml ]; then PM=pnpm;")
   })
 
   test("resolves relative template path from workspace directory", async () => {
